@@ -9,5 +9,5 @@ setup(
     install_requires=['discord', 'pytz', 'aiohttp', 'argparse', 'watchdog'],
     entry_points={
         "console_scripts": [
-            "svc_ds_webhook = F_Discord_webhook.webhook:main"],},
+            "svc_ds_webhook = F_Discord_webhook.webhook"],},
 )
