@@ -20,8 +20,9 @@ parser.add_argument("--epochs_to_train", dest="epochs_to_train", required=True, 
 parser.add_argument('--directory', default='./', help='Путь к директории, которую нужно мониторить')
 
 args = parser.parse_args()
+print(args)
 
-async def main(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
+async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
         embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name})", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
@@ -55,8 +56,9 @@ def on_file_created(event):
             training_time=f"~{training_hours}год, {training_minutes}хв, {training_seconds}сек"
             loop = asyncio.new_event_loop()  # Создаем новый event loop
             asyncio.set_event_loop(loop)
-            loop.run_until_complete(main(url, dataset_name, train_folder_name, train_start_date, percent, generation=f"{num}, потрібно {int(args.epochs_to_train)} осталось {int(args.epochs_to_train)-int(num)}", training_time=training_time))
+            loop.run_until_complete(process(url, dataset_name, train_folder_name, train_start_date, percent, generation=f"{num}, потрібно {int(args.epochs_to_train)} осталось {int(args.epochs_to_train)-int(num)}", training_time=training_time))
             loop.close()
+
 
 url = args.url
 #url = "https://discord.com/api/webhooks/1159946968945152101/Z-Ad6BO0tWkIPGn6hibsKAehzLJ6tsyk1aOjDwuorG9krGFBXRZdPBhNhG9uVxpf2_y-"
@@ -79,10 +81,13 @@ observer = Observer()
 observer.schedule(event_handler, path=directory, recursive=False)
 observer.start()
 
-if __name__ == '__main__':
+def main():
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
+if __name__ == '__main__':
+    main()
