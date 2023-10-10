@@ -20,7 +20,6 @@ parser.add_argument("--epochs_to_train", dest="epochs_to_train", required=True, 
 parser.add_argument('--directory', default='./', help='Путь к директории, которую нужно мониторить')
 
 args = parser.parse_args()
-print(args)
 
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
@@ -61,14 +60,11 @@ def on_file_created(event):
 
 
 url = args.url
-#url = "https://discord.com/api/webhooks/1159946968945152101/Z-Ad6BO0tWkIPGn6hibsKAehzLJ6tsyk1aOjDwuorG9krGFBXRZdPBhNhG9uVxpf2_y-"
 train_start_date = datetime.timestamp(datetime.now(pytz.timezone('Europe/Kiev')))
 dataset_name = args.dataset_name
 train_folder_name = args.train_folder_name
 train_directory = args.directory
 directory = train_directory
-#dataset_name = "SexMan"
-#train_folder_name = "Train"
 
 # Создаем директорию, если она не существует
 if not os.path.exists(directory):
