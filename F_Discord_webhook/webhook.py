@@ -17,24 +17,24 @@ parser.add_argument("--url", dest="url", required=True, type=str)
 parser.add_argument("--dataset_name", dest="dataset_name", default="AI", type=str)
 parser.add_argument("--train_folder_name", dest="train_folder_name", default=".", type=str)
 parser.add_argument("--epochs_to_train", dest="epochs_to_train", required=True, type=float)
-parser.add_argument('--directory', default='./', help='Путь к директории, которую нужно мониторить')
+parser.add_argument('--directory', default='./', help='Path to the directory to monitor')
 
 args = parser.parse_args()
 
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
-        if percent>=99:
-            embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name}) закінчено.", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
-        else: 
-            embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name})", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
-        embed.add_field(name="Вивченних поколінь", value=generation, inline=True)
-        total_training_time=datetime.fromtimestamp(datetime.timestamp(datetime.now())) - datetime.fromtimestamp(train_start_date)
-        embed.add_field(name="Весь вичерпанний час", value=total_training_time, inline=True)
-        if not percent>=99:
+        if percent >= 99:
+            embed = discord.Embed(title=f"AI Training Process ({dataset_name}, {train_folder_name}) completed.", description=f"Start Date: {datetime.fromtimestamp(train_start_date)}")
+        else:
+            embed = discord.Embed(title=f"AI Training Process ({dataset_name}, {train_folder_name})", description=f"Start Date: {datetime.fromtimestamp(train_start_date)}")
+        embed.add_field(name="Generations Trained", value=generation, inline=True)
+        total_training_time = datetime.fromtimestamp(datetime.timestamp(datetime.now())) - datetime.fromtimestamp(train_start_date)
+        embed.add_field(name="Total Elapsed Time", value=total_training_time, inline=True)
+        if not percent >= 99:
             embed.add_field(name="", value="", inline=False)
-            embed.add_field(name="Процент закінченого тренування", value=f"{percent}%", inline=True)
-            embed.add_field(name="Примірний час закінчення", value=training_time, inline=True)
+            embed.add_field(name="Percentage of Training Completed", value=f"{percent}%", inline=True)
+            embed.add_field(name="Estimated Completion Time", value=training_time, inline=True)
         await webhook.send(embed=embed, username="TEST WEBHOOK")
 
 def calculate_epochs(training_time_seconds, epoch_duration_seconds):
@@ -47,9 +47,9 @@ def on_file_created(event):
         if filename.startswith('G_'):
             epochs_to_train = args.epochs_to_train
             num = filename.replace("G_", "").replace(".pth", "")
-            epochs_to_train-=float(num)
+            epochs_to_train -= float(num)
             percent = str((float(num) / float(epochs_to_train)) * 100)
-            if int(percent)>=100:
+            if int(percent) >= 100:
                 percent = 100
             try:
                 percent = percent[:4]
@@ -63,14 +63,13 @@ def on_file_created(event):
             training_hours = int(training_time_minutes // 60)
             training_minutes = int(training_time_minutes % 60)
             training_seconds = int(training_time_seconds % 60)
-            training_time=f"~{training_hours}год, {training_minutes}хв, {training_seconds}сек"
-            loop = asyncio.new_event_loop()  # Создаем новый event loop
+            training_time = f"~{training_hours} hours, {training_minutes} minutes, {training_seconds} seconds"
+            loop = asyncio.new_event_loop()  # Create a new event loop
             asyncio.set_event_loop(loop)
-            loop.run_until_complete(process(url, dataset_name, train_folder_name, train_start_date, percent, generation=f"{num}, потрібно {int(args.epochs_to_train)} осталось {int(args.epochs_to_train)-int(num)}", training_time=training_time))
+            loop.run_until_complete(process(url, dataset_name, train_folder_name, train_start_date, percent, generation=f"{num}, {int(args.epochs_to_train) - int(num)} remaining", training_time=training_time))
             loop.close()
-            if percent>=99:
-                 exit()
-
+            if percent >= 99:
+                exit()
 
 url = args.url
 train_start_date = datetime.timestamp(datetime.now(pytz.timezone('Europe/Kiev')))
@@ -79,11 +78,11 @@ train_folder_name = args.train_folder_name
 train_directory = args.directory
 directory = train_directory
 
-# Создаем директорию, если она не существует
+# Create the directory if it doesn't exist
 if not os.path.exists(directory):
     raise FileNotFoundError(f"Folder not found: {directory}")
 
-# Настройка мониторинга за директорией
+# Set up directory monitoring
 event_handler = FileSystemEventHandler()
 event_handler.on_created = on_file_created
 observer = Observer()
