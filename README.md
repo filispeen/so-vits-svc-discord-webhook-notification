@@ -11,8 +11,8 @@
 <pre><code class="language-bash">pip install watchdog aiohttp discord.py pytz
 </code></pre>
 </li>
-<li><p><strong>Manual package installation</strong>:</p>
-<pre><code class="language-bash">pip install git+https://github.com/filispeen/so-vits-svc-discord-webhook-notification.git
+<li><p><strong>PyPi package installation</strong>:</p>
+<pre><code class="language-bash">pip install svc-ds-webhook
 </code></pre>
 </li>
 </ol>
