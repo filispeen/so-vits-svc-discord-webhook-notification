@@ -45,6 +45,7 @@ def on_file_created(event):
     if event.src_path.startswith(directory) and event.src_path.endswith('.pth'):
         filename = os.path.basename(event.src_path)
         if filename.startswith('G_'):
+            print(filename)
             epochs_to_train = args.epochs_to_train
             num = filename.replace("G_", "").replace(".pth", "")
             epochs_to_train -= float(num)
