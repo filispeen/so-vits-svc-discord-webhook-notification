@@ -68,6 +68,8 @@ def on_file_created(event):
             asyncio.set_event_loop(loop)
             loop.run_until_complete(process(url, dataset_name, train_folder_name, train_start_date, percent, generation=f"{num}, потрібно {int(args.epochs_to_train)} осталось {int(args.epochs_to_train)-int(num)}", training_time=training_time))
             loop.close()
+            if percent>=99:
+                 exit()
 
 
 url = args.url
