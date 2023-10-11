@@ -81,7 +81,7 @@ directory = train_directory
 
 # Создаем директорию, если она не существует
 if not os.path.exists(directory):
-    os.makedirs(directory)
+    raise FileNotFoundError(f"Folder not found: {directory}")
 
 # Настройка мониторинга за директорией
 event_handler = FileSystemEventHandler()
