@@ -45,7 +45,12 @@ def on_file_created(event):
             num = filename.replace("G_", "").replace(".txt", "")
             epochs_to_train-=float(num)
             percent = str((float(num) / float(epochs_to_train)) * 100)
-            percent = percent[:4]
+            try:
+                percent = percent[:4]
+            except ZeroDivisionError:
+                percent = 100
+            if args.epochs_to_train == num:
+                percent = 100
             current_speed = random.randint(9, 13)
             training_time_minutes = epochs_to_train / current_speed
             training_time_seconds = training_time_minutes * 60
