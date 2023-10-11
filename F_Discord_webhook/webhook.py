@@ -25,14 +25,16 @@ async def process(url, dataset_name, train_folder_name, train_start_date, percen
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
         if percent>=99:
+            embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name}) закінчено.", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
+        else: 
             embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name})", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
-        embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name})", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
         embed.add_field(name="Вивченних поколінь", value=generation, inline=True)
         total_training_time=datetime.fromtimestamp(datetime.timestamp(datetime.now())) - datetime.fromtimestamp(train_start_date)
         embed.add_field(name="Весь вичерпанний час", value=total_training_time, inline=True)
-        embed.add_field(name="", value="", inline=False)
-        embed.add_field(name="Процент закінченого тренування", value=f"{percent}%", inline=True)
-        embed.add_field(name="Примірний час закінчення", value=training_time, inline=True)
+        if not percent>=99:
+            embed.add_field(name="", value="", inline=False)
+            embed.add_field(name="Процент закінченого тренування", value=f"{percent}%", inline=True)
+            embed.add_field(name="Примірний час закінчення", value=training_time, inline=True)
         await webhook.send(embed=embed, username="TEST WEBHOOK")
 
 def calculate_epochs(training_time_seconds, epoch_duration_seconds):
@@ -47,6 +49,8 @@ def on_file_created(event):
             num = filename.replace("G_", "").replace(".pth", "")
             epochs_to_train-=float(num)
             percent = str((float(num) / float(epochs_to_train)) * 100)
+            if int(percent)>=100:
+                percent = 100
             try:
                 percent = percent[:4]
             except ZeroDivisionError:
