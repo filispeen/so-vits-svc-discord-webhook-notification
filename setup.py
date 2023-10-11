@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='F_Discord_webhook',
+    name='svc_ds_webhook',
     packages=find_packages(),
     version='2.0.19',
     description='Discord Webhook Messanger',
