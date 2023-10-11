@@ -7,6 +7,20 @@ setup(
     description='Discord Webhook Messanger',
     license='MIT',
     author='FILISPEEN',
+    long_description = """
+This is a Python script designed to monitor a specified directory for the progress of an AI training process and send real-time updates to a Discord webhook. It is a versatile tool suitable for tracking and reporting on the status of AI training runs.
+
+The script uses the Watchdog library to monitor the specified directory for file creation events. When a new file with a ".pth" extension is created, the script processes it to extract information about the AI training progress.
+
+Key features and functionality include:
+- Real-time updates: The script reports training progress to a Discord webhook, including details such as generations trained, the percentage of training completed, and estimated time for completion.
+- Customizable parameters: You can specify the Discord webhook URL, dataset name, and other options through command-line arguments.
+- Support for different time zones: The script uses the Pytz library to handle time zones, ensuring accurate timestamps in notifications.
+
+To use this script, simply set up the necessary parameters, run it, and it will continuously monitor the specified directory for training progress updates. It's a handy tool for keeping track of AI training processes and staying informed about their status.
+
+For detailed usage instructions, please refer to the documentation or the project's README file.
+""",
     install_requires=['discord', 'pytz', 'aiohttp', 'argparse', 'watchdog'],
     entry_points={
         "console_scripts": [
