@@ -38,11 +38,11 @@ def calculate_epochs(training_time_seconds, epoch_duration_seconds):
     return int(epochs)
 
 def on_file_created(event):
-    if event.src_path.startswith(directory) and event.src_path.endswith('.txt'):
+    if event.src_path.startswith(directory) and event.src_path.endswith('.pth'):
         filename = os.path.basename(event.src_path)
         if filename.startswith('G_'):
             epochs_to_train = args.epochs_to_train
-            num = filename.replace("G_", "").replace(".txt", "")
+            num = filename.replace("G_", "").replace(".pth", "")
             epochs_to_train-=float(num)
             percent = str((float(num) / float(epochs_to_train)) * 100)
             try:
