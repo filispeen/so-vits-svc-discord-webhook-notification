@@ -1,4 +1,4 @@
-[![Upload Python Package](https://github.com/filispeen/so-vits-svc-discord-webhook-notification/actions/workflows/python-publish.yml/badge.svg)](https://github.com/filispeen/so-vits-svc-discord-webhook-notification/actions/workflows/python-publish.yml)
+[![Upload Python Package](https://github.com/filispeen/so-vits-svc-discord-webhook-notification/actions/workflows/python_publish.yml/badge.svg?branch=release)](https://github.com/filispeen/so-vits-svc-discord-webhook-notification/actions/workflows/python_publish.yml)
 <h1 id="how-to-use-the-svc-ai-training-progress-monitoring-script">How to Use the SVC AI Training Progress Monitoring Script</h1>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>Before using the script, ensure you have the following prerequisites in place:</p>
