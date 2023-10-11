@@ -11,7 +11,6 @@ setup(
     entry_points={
         "console_scripts": [
             "svc_ds_webhook = F_Discord_webhook.webhook:main"],},
-    author = "FILISPEEN"
     url = 'https://github.com/filispeen/so-vits-svc-discord-webhook-notification',
     keywords = ['discord', 'webhook', 'discord_webhook', 'svc', 'so-vits-svc-fork', 'so-vits-svc-fork-discord-webhook'],
       classifiers=[
