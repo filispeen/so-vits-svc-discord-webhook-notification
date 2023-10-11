@@ -24,6 +24,8 @@ args = parser.parse_args()
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
+        if percent>=99:
+            embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name})", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
         embed = discord.Embed(title=f"Процесс тренування АІ ({dataset_name}, {train_folder_name})", description=f"Дата запуска: {datetime.fromtimestamp(train_start_date)}")
         embed.add_field(name="Вивченних поколінь", value=generation, inline=True)
         total_training_time=datetime.fromtimestamp(datetime.timestamp(datetime.now())) - datetime.fromtimestamp(train_start_date)
