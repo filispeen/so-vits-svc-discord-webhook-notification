@@ -24,7 +24,7 @@ args = parser.parse_args()
 async def av_test(url):
   async with aiohttp.ClientSession() as session:
     webhook = Webhook.from_url(url, session=session)
-    await webhook.send(username="Availability test")
+    await webhook.send("Awaibility test", username="Availability test")
 
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
