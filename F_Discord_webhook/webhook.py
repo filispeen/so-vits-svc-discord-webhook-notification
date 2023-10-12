@@ -21,6 +21,11 @@ parser.add_argument('--directory', default='./', help='Path to the directory to 
 
 args = parser.parse_args()
 
+async def av_test(url):
+  async with aiohttp.ClientSession() as session:
+    webhook = Webhook.from_url(turl, session=session)
+    await webhook.send(username="Availability test")
+
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
@@ -85,13 +90,20 @@ if not os.path.exists(directory):
     raise FileNotFoundError(f"Folder not found: {directory}")
 
 # Set up directory monitoring
+webhook_availibility=False
 event_handler = FileSystemEventHandler()
 event_handler.on_created = on_file_created
 observer = Observer()
 observer.schedule(event_handler, path=directory, recursive=False)
 observer.start()
 
-def main():
+def main(turl):
+    global webhook_availibility
+    if not webhook_availibility:
+      loop = asyncio.new_event_loop()  # Create a new event loop
+      asyncio.set_event_loop(loop)
+      loop.run_until_complete(av_test(turl))
+      loop.close()
     try:
         while True:
             time.sleep(1)
@@ -100,4 +112,7 @@ def main():
     observer.join()
 
 if __name__ == '__main__':
-    main()
+    main(url)
+
+
+
