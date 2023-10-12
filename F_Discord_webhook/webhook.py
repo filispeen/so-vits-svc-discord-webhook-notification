@@ -64,7 +64,7 @@ def on_file_created(event):
                 percent = "100"
             if args.epochs_to_train == num:
                 percent = "100"
-            current_speed = random.randint(9, 13)
+            current_speed = random.randint(26, 31)
             training_time_minutes = epochs_to_train / current_speed
             training_time_seconds = training_time_minutes * 60
             training_hours = int(training_time_minutes // 60)
