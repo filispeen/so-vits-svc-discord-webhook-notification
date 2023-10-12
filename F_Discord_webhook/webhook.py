@@ -112,7 +112,7 @@ def main(turl):
     observer.join()
 
 if __name__ == '__main__':
-    main(url)
+    main(turl=url)
 
 
 
