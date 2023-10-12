@@ -24,14 +24,14 @@ args = parser.parse_args()
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
-        if percent >= 99:
+        if int(percent) >= 99:
             embed = discord.Embed(title=f"AI Training Process ({dataset_name}, {train_folder_name}) completed.", description=f"Start Date: {datetime.fromtimestamp(train_start_date)}")
         else:
             embed = discord.Embed(title=f"AI Training Process ({dataset_name}, {train_folder_name})", description=f"Start Date: {datetime.fromtimestamp(train_start_date)}")
         embed.add_field(name="Generations Trained", value=generation, inline=True)
         total_training_time = datetime.fromtimestamp(datetime.timestamp(datetime.now())) - datetime.fromtimestamp(train_start_date)
         embed.add_field(name="Total Elapsed Time", value=total_training_time, inline=True)
-        if not percent >= 99:
+        if not int(percent) >= 99:
             embed.add_field(name="", value="", inline=False)
             embed.add_field(name="Percentage of Training Completed", value=f"{percent}%", inline=True)
             embed.add_field(name="Estimated Completion Time", value=training_time, inline=True)
