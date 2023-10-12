@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name='svc_ds_webhook',
     packages=find_packages(),
-    version='2.0.22',
+    version='2.0.23',
     description='Discord Webhook Messanger',
     license='MIT',
     author='FILISPEEN',
