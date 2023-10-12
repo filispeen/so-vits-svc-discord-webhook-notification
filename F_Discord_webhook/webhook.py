@@ -97,13 +97,14 @@ observer = Observer()
 observer.schedule(event_handler, path=directory, recursive=False)
 observer.start()
 
-def main(turl):
+def main(url):
     global webhook_availibility
     if not webhook_availibility:
       loop = asyncio.new_event_loop()  # Create a new event loop
       asyncio.set_event_loop(loop)
-      loop.run_until_complete(av_test(turl))
+      loop.run_until_complete(av_test(url))
       loop.close()
+      webhook_availibility=True
     try:
         while True:
             time.sleep(1)
@@ -112,7 +113,7 @@ def main(turl):
     observer.join()
 
 if __name__ == '__main__':
-    main(turl=url)
+    main(url)
 
 
 
