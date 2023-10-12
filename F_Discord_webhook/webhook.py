@@ -52,13 +52,13 @@ def on_file_created(event):
             percent = (float(num) / float(epochs_to_train)) * 100
             percent = str(round(percent))
             if int(percent) >= 100:
-                percent = 100
+                percent = "100"
             try:
                 percent = percent[:4]
             except ZeroDivisionError:
-                percent = 100
+                percent = "100"
             if args.epochs_to_train == num:
-                percent = 100
+                percent = "100"
             current_speed = random.randint(9, 13)
             training_time_minutes = epochs_to_train / current_speed
             training_time_seconds = training_time_minutes * 60
@@ -70,7 +70,7 @@ def on_file_created(event):
             asyncio.set_event_loop(loop)
             loop.run_until_complete(process(url, dataset_name, train_folder_name, train_start_date, percent, generation=f"{num}, {int(args.epochs_to_train) - int(num)} remaining", training_time=training_time))
             loop.close()
-            if percent >= 99:
+            if int(percent) >= 99:
                 exit()
 
 url = args.url
