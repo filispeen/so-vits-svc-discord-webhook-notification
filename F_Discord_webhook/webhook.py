@@ -49,7 +49,8 @@ def on_file_created(event):
             epochs_to_train = args.epochs_to_train
             num = filename.replace("G_", "").replace(".pth", "")
             epochs_to_train -= float(num)
-            percent = str((float(num) / float(epochs_to_train)) * 100)
+            percent = (float(num) / float(epochs_to_train)) * 100
+            percent = str(round(percent))
             if int(percent) >= 100:
                 percent = 100
             try:
