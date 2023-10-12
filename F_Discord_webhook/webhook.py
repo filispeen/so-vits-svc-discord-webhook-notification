@@ -97,7 +97,8 @@ observer = Observer()
 observer.schedule(event_handler, path=directory, recursive=False)
 observer.start()
 
-def main(url):
+def main():
+    global url
     global webhook_availibility
     if not webhook_availibility:
       loop = asyncio.new_event_loop()  # Create a new event loop
@@ -113,7 +114,7 @@ def main(url):
     observer.join()
 
 if __name__ == '__main__':
-    main(url)
+    main()
 
 
 
