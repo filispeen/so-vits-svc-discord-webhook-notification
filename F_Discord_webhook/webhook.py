@@ -24,7 +24,7 @@ args = parser.parse_args()
 async def av_test(url):
   async with aiohttp.ClientSession() as session:
     webhook = Webhook.from_url(url, session=session)
-    await webhook.send("Awaibility test", username="Availability test")
+    await webhook.send("Avaibility test", username="svcf webhook")
 
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
@@ -40,7 +40,7 @@ async def process(url, dataset_name, train_folder_name, train_start_date, percen
             embed.add_field(name="", value="", inline=False)
             embed.add_field(name="Percentage of Training Completed", value=f"{percent}%", inline=True)
             embed.add_field(name="Estimated Completion Time", value=training_time, inline=True)
-        await webhook.send(embed=embed, username="TEST WEBHOOK")
+        await webhook.send(embed=embed, username="svcf webhook")
 
 def calculate_epochs(training_time_seconds, epoch_duration_seconds):
     epochs = training_time_seconds / epoch_duration_seconds
