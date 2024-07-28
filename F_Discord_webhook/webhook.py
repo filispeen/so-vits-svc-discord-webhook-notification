@@ -12,19 +12,17 @@ import pytz
 import os
 
 parser = argparse.ArgumentParser(description="DS WebHook")
-
 parser.add_argument("--url", dest="url", required=True, type=str)
 parser.add_argument("--dataset_name", dest="dataset_name", default="AI", type=str)
 parser.add_argument("--train_folder_name", dest="train_folder_name", default=".", type=str)
 parser.add_argument("--epochs_to_train", dest="epochs_to_train", required=True, type=float)
 parser.add_argument('--directory', default='./', help='Path to the directory to monitor')
-
 args = parser.parse_args()
 
 async def av_test(url):
-  async with aiohttp.ClientSession() as session:
-    webhook = Webhook.from_url(url, session=session)
-    await webhook.send("Avaibility test", username="svcf webhook")
+    async with aiohttp.ClientSession() as session:
+        webhook = Webhook.from_url(url, session=session)
+        await webhook.send("Availability test", username="svcf webhook")
 
 async def process(url, dataset_name, train_folder_name, train_start_date, percent, generation, training_time):
     async with aiohttp.ClientSession() as session:
@@ -34,17 +32,13 @@ async def process(url, dataset_name, train_folder_name, train_start_date, percen
         else:
             embed = discord.Embed(title=f"AI Training Process ({dataset_name}, {train_folder_name})", description=f"Start Date: {datetime.fromtimestamp(train_start_date)}")
         embed.add_field(name="Generations Trained", value=generation, inline=True)
-        total_training_time = datetime.fromtimestamp(datetime.timestamp(datetime.now())) - datetime.fromtimestamp(train_start_date)
+        total_training_time = datetime.now() - datetime.fromtimestamp(train_start_date)
         embed.add_field(name="Total Elapsed Time", value=total_training_time, inline=True)
-        if not int(percent) >= 99:
+        if int(percent) < 99:
             embed.add_field(name="", value="", inline=False)
             embed.add_field(name="Percentage of Training Completed", value=f"{percent}%", inline=True)
             embed.add_field(name="Estimated Completion Time", value=training_time, inline=True)
         await webhook.send(embed=embed, username="svcf webhook")
-
-def calculate_epochs(training_time_seconds, epoch_duration_seconds):
-    epochs = training_time_seconds / epoch_duration_seconds
-    return int(epochs)
 
 def on_file_created(event):
     if event.src_path.startswith(directory) and event.src_path.endswith('.pth'):
@@ -53,19 +47,17 @@ def on_file_created(event):
             print(filename)
             epochs_to_train = args.epochs_to_train
             num = filename.replace("G_", "").replace(".pth", "")
-            epochs_to_train -= float(num)
-            percent = (float(num) / float(epochs_to_train)) * 200
-            percent = str(round(percent))
-            if int(percent) >= 100:
-                percent = "100"
+            epochs_remaining = epochs_to_train - float(num)
+            percent = (float(num) / epochs_to_train) * 100
+            percent = str(round(percent, 2))
+            if float(percent) >= 100:
+                percent = "100.0"
             try:
                 percent = percent[:4]
             except ZeroDivisionError:
-                percent = "100"
-            if args.epochs_to_train == num:
-                percent = "100"
+                percent = "100.0"
             current_speed = random.randint(26, 31)
-            training_time_minutes = epochs_to_train / current_speed
+            training_time_minutes = epochs_remaining / current_speed
             training_time_seconds = training_time_minutes * 60
             training_hours = int(training_time_minutes // 60)
             training_minutes = int(training_time_minutes % 60)
@@ -73,9 +65,9 @@ def on_file_created(event):
             training_time = f"~{training_hours} hours, {training_minutes} minutes, {training_seconds} seconds"
             loop = asyncio.new_event_loop()  # Create a new event loop
             asyncio.set_event_loop(loop)
-            loop.run_until_complete(process(url, dataset_name, train_folder_name, train_start_date, percent, generation=f"{num}, {int(args.epochs_to_train) - int(num)} remaining", training_time=training_time))
+            loop.run_until_complete(process(args.url, args.dataset_name, args.train_folder_name, train_start_date, int(float(percent)), generation=f"{num}, {int(epochs_to_train) - int(num)} remaining", training_time=training_time))
             loop.close()
-            if int(percent) >= 99:
+            if int(float(percent)) >= 99:
                 exit()
 
 url = args.url
@@ -90,7 +82,7 @@ if not os.path.exists(directory):
     raise FileNotFoundError(f"Folder not found: {directory}")
 
 # Set up directory monitoring
-webhook_availibility=False
+webhook_availibility = False
 event_handler = FileSystemEventHandler()
 event_handler.on_created = on_file_created
 observer = Observer()
@@ -98,14 +90,13 @@ observer.schedule(event_handler, path=directory, recursive=False)
 observer.start()
 
 def main():
-    global url
     global webhook_availibility
     if not webhook_availibility:
-      loop = asyncio.new_event_loop()  # Create a new event loop
-      asyncio.set_event_loop(loop)
-      loop.run_until_complete(av_test(url))
-      loop.close()
-      webhook_availibility=True
+        loop = asyncio.new_event_loop()  # Create a new event loop
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(av_test(args.url))
+        loop.close()
+        webhook_availibility = True
     try:
         while True:
             time.sleep(1)
@@ -115,6 +106,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
